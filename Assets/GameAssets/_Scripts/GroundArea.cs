@@ -5,7 +5,8 @@ using UnityEngine;
 public class GroundArea : MonoBehaviour
 {
     [SerializeField] Color normalColor;
-    [SerializeField] Color hitColor;
+    [SerializeField] Color hoverColor;
+    [SerializeField] Color selectedColor;
     public bool hit = false;
 
     MeshRenderer rend;
@@ -19,12 +20,19 @@ public class GroundArea : MonoBehaviour
     {
         if (hit)
         {
-            rend.material.color = hitColor;
+            rend.material.color = hoverColor;
             hit = false;
+
+            AreaController.Up(0, this);
         }
         else
         {
             rend.material.color = normalColor;
+        }
+
+        if (AreaController.selectedArea == this)
+        {
+            rend.material.color = selectedColor;
         }
     }
 

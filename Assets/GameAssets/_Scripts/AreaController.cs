@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectArea : MonoBehaviour
+public class AreaController : MonoBehaviour
 {
-    Camera cam;
+    [SerializeField] Camera cam;
 
-    private void Start()
-    {
-        cam = GetComponent<Camera>();
-    }
+    public static GroundArea selectedArea;
 
     private void Update()
     {
@@ -19,7 +16,7 @@ public class SelectArea : MonoBehaviour
         Debug.DrawRay(transform.position, ray.direction * 40, Color.red, .1f);
 
         Physics.Raycast(ray, out hit);
-        
+
         if (hit.collider)
         {
             GroundArea area = hit.collider.GetComponent<GroundArea>();
@@ -28,5 +25,18 @@ public class SelectArea : MonoBehaviour
                 area.hit = true;
             }
         }
+    }
+
+    public static bool Up(int mouseButton, GroundArea area)
+    {
+        // Al levantar el botón del ratón
+        if (Input.GetMouseButtonUp(mouseButton))
+        {
+            selectedArea = area == selectedArea ? null : area;
+
+            return true;
+        }
+
+        return false;
     }
 }
