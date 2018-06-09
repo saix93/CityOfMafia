@@ -4,16 +4,29 @@ using UnityEngine;
 
 public class GroundArea : MonoBehaviour
 {
-    [SerializeField] Color normalColor;
+    // Colores al pasar por encima / seleccionar un area
+    // TODO: Cambiar por un cambio en el material, que refleje el cambio de área sin alterar el color
     [SerializeField] Color hoverColor;
     [SerializeField] Color selectedColor;
+
     public bool hit = false;
+
+    // Area properties
+    [System.Serializable]
+    public class Properties
+    {
+        public string name = "Ground";
+        public Faction faction;
+    }
+    public Properties props;
 
     MeshRenderer rend;
 
     private void Start()
     {
         rend = GetComponent<MeshRenderer>();
+
+        AreaController.AddArea(this);
     }
 
     private void Update()
@@ -23,11 +36,14 @@ public class GroundArea : MonoBehaviour
             rend.material.color = hoverColor;
             hit = false;
 
-            AreaController.Up(0, this);
+            if (Input.GetMouseButtonUp(0))
+            {
+                AreaController.SelectArea(this);
+            }
         }
         else
         {
-            rend.material.color = normalColor;
+            rend.material.color = props.faction.color;
         }
 
         if (AreaController.selectedArea == this)
@@ -38,10 +54,9 @@ public class GroundArea : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        CityDistrictsGenerator cdGen = GetComponent<CityDistrictsGenerator>();
         Renderer renderer = GetComponent<Renderer>();
 
-        drawString(cdGen.siteName, renderer.bounds.center);
+        drawString(props.name, renderer.bounds.center);
     }
 
     static void drawString(string text, Vector3 worldPos, Color? colour = null)

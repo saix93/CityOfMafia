@@ -14,7 +14,8 @@ public class CityDistrictsGenerator : MonoBehaviour
     public float Thickness = 1.0f;
 
     public bool shouldGenerate = true;
-    public string siteName = "Ground";
+
+    public Faction[] factionList;
 
     float _Area = -1.0f;
     public float Area
@@ -112,7 +113,11 @@ public class CityDistrictsGenerator : MonoBehaviour
                 cdGenerator.Polygon.Clear();
                 cdGenerator.Polygon.AddRange(clipped);
 
-                cdGenerator.siteName = "Site " + i;
+                var grArea = newGo.GetComponent<GroundArea>();
+
+                grArea.props.name = "Area " + i;
+                // Coloca una facción aleatoria a cada area creada desde un array de facciones (ScriptableObjects)
+                grArea.props.faction = factionList[Random.Range(0, factionList.Length)];
 
                 var childArea = cdGenerator.Area;
             }
